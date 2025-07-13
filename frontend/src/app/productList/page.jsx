@@ -1,15 +1,16 @@
 "use client";
+
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Poppins } from "next/font/google";
 
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["500"],
-  variable: "--font-poppins"
+  variable: "--font-poppins",
 });
 
-export default function ProductDashboard() {
+export default function ProductList() {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,7 +31,8 @@ export default function ProductDashboard() {
         setError("No products found.");
       }
     } catch (err) {
-      setError("Error fetching products.");
+      console.error(err);
+      setError("Error while loading products.");
     } finally {
       setLoading(false);
     }
@@ -41,25 +43,30 @@ export default function ProductDashboard() {
   }, []);
 
   return (
-    <div>
+    <div className="p-8">
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <div className="p-4 border-b">
-          <h2 className={`text-xl font-semibold ${poppins.className}`}>Product List</h2>
+          <h2 className={`text-xl font-semibold ${poppins.className}`}>
+            Product List
+          </h2>
         </div>
 
-        {loading && <p className="p-4 text-blue-500">Loading...</p>}
+        {loading && (
+          <p className="p-4 text-blue-500">Loading...</p>
+        )}
         {error && <p className="p-4 text-red-500">{error}</p>}
 
-        {!loading && !error && (
+        {!loading && !error && products.length > 0 && (
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm text-left">
               <thead className="bg-gray-100 text-gray-700">
                 <tr>
-                  <th className="px-4 py-3">Number</th>
+                  <th className="px-4 py-3">#</th>
                   <th className="px-4 py-3">Category</th>
                   <th className="px-4 py-3">Product Name</th>
                   <th className="px-4 py-3">Quantity</th>
                   <th className="px-4 py-3">Arrival Date</th>
+                  <th className="px-4 py-3">Production Date</th>
                   <th className="px-4 py-3">Expiration Date</th>
                   <th className="px-4 py-3">Unit Price</th>
                   <th className="px-4 py-3">Total Price</th>
@@ -68,12 +75,15 @@ export default function ProductDashboard() {
               <tbody className="bg-white divide-y divide-gray-200">
                 {products.map((prod, index) => (
                   <tr key={prod._id}>
-                    <td className="px-4 py-3 font-medium">{index + 1}</td>
+                    <td className="px-4 py-3">{index + 1}</td>
                     <td className="px-4 py-3">{prod.category}</td>
                     <td className="px-4 py-3">{prod.name}</td>
                     <td className="px-4 py-3">{prod.quant}</td>
                     <td className="px-4 py-3">
                       {new Date(prod.ariDate).toLocaleDateString()}
+                    </td>
+                    <td className="px-4 py-3">
+                      {new Date(prod.proDate).toLocaleDateString()}
                     </td>
                     <td className="px-4 py-3">
                       {new Date(prod.expDate).toLocaleDateString()}

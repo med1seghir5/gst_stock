@@ -95,7 +95,7 @@ export default function Register() {
           </div>
           
           <div>
-            <label className={`block text-md font-medium mb-2 ${poppins.className}`}>Nom d'utilisateur</label>
+            <label className={`block text-md font-medium mb-2 ${poppins.className}`}>Username</label>
             <input
               type="text"
               name="username"
@@ -107,7 +107,7 @@ export default function Register() {
           </div>
           
           <div>
-            <label className={`block text-md font-medium mb-2 ${poppins.className}`}>Mot de passe</label>
+            <label className={`block text-md font-medium mb-2 ${poppins.className}`}>Password</label>
             <input
               type="password"
               name="password"
@@ -120,7 +120,7 @@ export default function Register() {
           </div>
           
           <div>
-            <label className={`block text-md font-medium mb-2 ${poppins.className}`}>Confirmez le mot de passe</label>
+            <label className={`block text-md font-medium mb-2 ${poppins.className}`}>Confirm Password</label>
             <input
               type="password"
               name="confirmPassword"
@@ -135,10 +135,10 @@ export default function Register() {
             type="submit"
             disabled={isLoading}
             className={`${poppins.className} w-full py-2 px-4 bg-blue-600 text-white rounded-md transition ${
-            isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
+              isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
             }`}
           >
-            {isLoading ? "Inscription en cours..." : "S'inscrire"}
+            {isLoading ? "Registering..." : "Register"}
           </button>
         </form>
       </div>

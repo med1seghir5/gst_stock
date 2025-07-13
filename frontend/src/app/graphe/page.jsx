@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import {
   LineChart,
@@ -17,8 +16,21 @@ import {
   CircularProgress,
 } from "@mui/material";
 import axios from "axios";
+import { Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
 
-// ✅ Fonction modifiée pour ajouter un espace (date antérieure avec total 0)
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["500"],
+  variable: "--font-inter"
+});
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["500"],
+  variable: "--font-poppins"
+});
+
 const groupByDateSum = (products) => {
   const grouped = {};
 
@@ -38,15 +50,14 @@ const groupByDateSum = (products) => {
     total: grouped[date],
   }));
 
-  // ✅ Ajouter une date antérieure (veille du premier point) avec total 0
   const firstDate = formattedData[0]?.date;
   let spacer = "";
 
   if (firstDate) {
-    const [day, month, year] = firstDate.split("/"); // format local FR: dd/mm/yyyy
+    const [day, month, year] = firstDate.split("/");
     const jsDate = new Date(`${year}-${month}-${day}`);
-    jsDate.setDate(jsDate.getDate() - 1); // la veille
-    spacer = jsDate.toLocaleDateString(); // ex: "21/06/2025"
+    jsDate.setDate(jsDate.getDate() - 1);
+    spacer = jsDate.toLocaleDateString();
   }
 
   return [{ date: spacer, total: 0 }, ...formattedData];
@@ -78,9 +89,9 @@ export default function ProductAnalytics() {
   }, []);
 
   return (
-    <Box sx={{ padding: 2, minHeight: "100vh" }}>
+    <Box className="border-2 rounded-lg shadow-[#000000] shadow-lg border-[#E6EDFF]">
       <Paper sx={{ padding: 4 }}>
-        <Typography variant="h6" mb={2}>
+        <Typography variant="h6" mb={2} className={poppins.className}>
           Total purchases by date
         </Typography>
 
@@ -95,10 +106,7 @@ export default function ProductAnalytics() {
               margin={{ top: 20, right: 30, left: 30, bottom: 50 }}
             >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis
-                dataKey="date"
-                padding={{ left: 30, right: 10 }}
-              />
+              <XAxis dataKey="date" padding={{ left: 30, right: 10 }} />
               <YAxis />
               <Tooltip formatter={(val) => `${val.toLocaleString()} DZD`} />
               <Line

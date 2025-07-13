@@ -10,17 +10,16 @@ export const Register = async (req, res) => {
 
   try {
     if (!email || !username || !password || !confirmPassword) {
-      return res.status(400).json({ success: false, message: "Tous les champs sont requis" });
+      return res.status(400).json({ success: false, message: "All fields are required" });
     }
 
     if (password !== confirmPassword) {
-      return res.status(400).json({ success: false, message: "Les mots de passe ne correspondent pas" });
+      return res.status(400).json({ success: false, message: "Passwords do not match" });
     }
 
     const existUser = await Users.findOne({ $or: [{ email }, { username }] });
-
     if (existUser) {
-      return res.status(400).json({ success: false, message: "L'utilisateur existe déjà" });
+      return res.status(400).json({ success: false, message: "User already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -32,17 +31,13 @@ export const Register = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: "Utilisateur enregistré avec succès",
+      message: "User registered successfully",
       user: userResponse
     });
 
   } catch (err) {
     console.error("Registration error:", err);
-    return res.status(500).json({
-      success: false,
-      message: "Échec de l'inscription",
-      error: err.message
-    });
+    return res.status(500).json({ success: false, message: "Registration failed" });
   }
 };
 
@@ -64,13 +59,13 @@ export const Login = async (req, res) => {
     }
 
     const accessToken = jwt.sign(
-      { id: user._id }, // ✅ utilisé "id"
+      { _id: user._id },
       process.env.SECRET_ACCESS,
       { expiresIn: "15m" }
     );
 
     const refreshToken = jwt.sign(
-      { id: user._id }, // ✅ aussi ici
+      { _id: user._id },
       process.env.SECRET_REFRESH,
       { expiresIn: "7d" }
     );
@@ -86,7 +81,7 @@ export const Login = async (req, res) => {
 
     res.cookie("accessToken", accessToken, {
       ...cookieOptions,
-      maxAge: 15 * 60 * 1000
+      maxAge: 15 * 60 * 1000 // 15 minutes
     });
 
     res.cookie("refreshToken", refreshToken, {
@@ -106,11 +101,7 @@ export const Login = async (req, res) => {
 
   } catch (err) {
     console.error("Login error:", err);
-    return res.status(500).json({
-      success: false,
-      message: "Login failed",
-      error: err.message
-    });
+    return res.status(500).json({ success: false, message: "Login failed" });
   }
 };
 
@@ -132,7 +123,7 @@ export const Logout = async (req, res) => {
 
   } catch (err) {
     console.error("Logout error:", err);
-    return res.status(500).json({ success: false, message: "Logout failed", error: err.message });
+    return res.status(500).json({ success: false, message: "Logout failed" });
   }
 };
 
@@ -145,14 +136,14 @@ export const refreshToken = async (req, res) => {
 
   try {
     const decoded = jwt.verify(refreshToken, process.env.SECRET_REFRESH);
-    const user = await Users.findById(decoded.id);
+    const user = await Users.findById(decoded._id);
 
     if (!user || user.refreshToken !== refreshToken) {
       return res.status(403).json({ success: false, message: "Invalid refresh token" });
     }
 
     const newAccessToken = jwt.sign(
-      { id: user._id }, // ✅ cohérent
+      { _id: user._id },
       process.env.SECRET_ACCESS,
       { expiresIn: "15m" }
     );
@@ -164,7 +155,11 @@ export const refreshToken = async (req, res) => {
       maxAge: 15 * 60 * 1000
     });
 
-    return res.json({ success: true, message: "Token refreshed successfully", accessToken: newAccessToken });
+    return res.json({
+      success: true,
+      message: "Token refreshed successfully",
+      accessToken: newAccessToken
+    });
 
   } catch (err) {
     console.error("Refresh token error:", err);
@@ -180,7 +175,7 @@ export const protectRoute = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.SECRET_ACCESS);
-    const user = await Users.findById(decoded.id).select('-password');
+    const user = await Users.findById(decoded._id).select('-password');
 
     if (!user) {
       return res.status(401).json({ success: false, message: "User not found" });
@@ -203,7 +198,7 @@ export const getCurrentUser = async (req, res) => {
     const user = req.user;
     return res.status(200).json({
       success: true,
-      message: "Utilisateur connecté",
+      message: "Authenticated user",
       user: {
         id: user._id,
         email: user.email,
@@ -211,7 +206,7 @@ export const getCurrentUser = async (req, res) => {
       }
     });
   } catch (err) {
-    console.error("Erreur current-user:", err);
-    return res.status(500).json({ success: false, message: "Erreur serveur" });
+    console.error("Current user error:", err);
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 };

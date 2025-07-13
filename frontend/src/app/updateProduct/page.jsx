@@ -1,4 +1,3 @@
-// ... autres imports
 "use client";
 import axios from "axios";
 import { useState, useEffect } from "react";
@@ -26,7 +25,7 @@ export default function UpdateProduct() {
       setProducts(res.data.data || []);
     } catch (err) {
       console.error(err);
-      setError("Erreur lors du chargement des produits.");
+      setError("Error while loading products.");
     } finally {
       setLoading(false);
     }
@@ -40,14 +39,13 @@ export default function UpdateProduct() {
         withCredentials: true,
       });
       setProducts((prev) => prev.filter((prod) => prod._id !== id));
-      setSuccess("Produit supprimé.");
+      setSuccess("Product deleted.");
     } catch (err) {
       console.error(err);
-      setError("Erreur lors de la suppression du produit.");
+      setError("Error while deleting the product.");
     }
   };
 
-  // ✅ Corrigé : cast des types et exclusion des champs non nécessaires
   const handleUpdate = async (id) => {
     setError("");
     setSuccess("");
@@ -66,10 +64,10 @@ export default function UpdateProduct() {
         cleanData,
         { withCredentials: true }
       );
-      setSuccess("Produit mis à jour.");
+      setSuccess("Product updated.");
     } catch (err) {
       console.error(err);
-      setError("Erreur lors de la mise à jour du produit.");
+      setError("Error while updating the product.");
     }
   };
 
@@ -88,24 +86,25 @@ export default function UpdateProduct() {
   return (
     <div className="p-7">
       <h2 className={`text-2xl font-semibold mb-4 ${poppins.className}`}>
-        Liste des Produits
+        Product List
       </h2>
 
-      {loading && <p className="text-blue-500">Chargement...</p>}
+      {loading && <p className="text-blue-500">Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
       {success && <p className="text-green-600">{success}</p>}
 
       {products.length === 0 && !loading && (
-        <p className="text-gray-500">Aucun produit trouvé.</p>
+        <p className="text-gray-500">No products found.</p>
       )}
 
-     <table className="bg-white shadow-md rounded-lg overflow-hidden w-full mt-4">
+      <table className="bg-white shadow-md rounded-lg overflow-hidden w-full mt-4">
         <thead className="bg-gray-100 text-gray-700">
           <tr>
             <th className="px-4 py-2">Category</th>
             <th className="px-4 py-2">Product Name</th>
             <th className="px-4 py-2">Quantity</th>
             <th className="px-4 py-2">Arrival Date</th>
+            <th className="px-4 py-2">Production Date</th>
             <th className="px-4 py-2">Expiration Date</th>
             <th className="px-4 py-2">Unit Price</th>
             <th className="px-4 py-2">Actions</th>
@@ -128,7 +127,9 @@ export default function UpdateProduct() {
                 <input
                   type="text"
                   value={prod.name}
-                  onChange={(e) => handleChange(prod._id, "name", e.target.value)}
+                  onChange={(e) =>
+                    handleChange(prod._id, "name", e.target.value)
+                  }
                   className="text-center p-1 rounded w-full"
                 />
               </td>
@@ -136,7 +137,9 @@ export default function UpdateProduct() {
                 <input
                   type="number"
                   value={prod.quant}
-                  onChange={(e) => handleChange(prod._id, "quant", e.target.value)}
+                  onChange={(e) =>
+                    handleChange(prod._id, "quant", e.target.value)
+                  }
                   className="text-center p-1 rounded w-full"
                 />
               </td>
@@ -144,9 +147,13 @@ export default function UpdateProduct() {
                 <input
                   type="date"
                   value={
-                    prod.ariDate ? new Date(prod.ariDate).toISOString().split("T")[0] : ""
+                    prod.ariDate
+                      ? new Date(prod.ariDate).toISOString().split("T")[0]
+                      : ""
                   }
-                  onChange={(e) => handleChange(prod._id, "ariDate", e.target.value)}
+                  onChange={(e) =>
+                    handleChange(prod._id, "ariDate", e.target.value)
+                  }
                   className="text-center p-1 rounded w-full"
                 />
               </td>
@@ -154,9 +161,27 @@ export default function UpdateProduct() {
                 <input
                   type="date"
                   value={
-                    prod.expDate ? new Date(prod.expDate).toISOString().split("T")[0] : ""
+                    prod.proDate
+                      ? new Date(prod.proDate).toISOString().split("T")[0]
+                      : ""
                   }
-                  onChange={(e) => handleChange(prod._id, "expDate", e.target.value)}
+                  onChange={(e) =>
+                    handleChange(prod._id, "proDate", e.target.value)
+                  }
+                  className="text-center p-1 rounded w-full"
+                />
+              </td>
+              <td className="px-4 py-2">
+                <input
+                  type="date"
+                  value={
+                    prod.expDate
+                      ? new Date(prod.expDate).toISOString().split("T")[0]
+                      : ""
+                  }
+                  onChange={(e) =>
+                    handleChange(prod._id, "expDate", e.target.value)
+                  }
                   className="text-center p-1 rounded w-full"
                 />
               </td>

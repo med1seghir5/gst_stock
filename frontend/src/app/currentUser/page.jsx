@@ -1,4 +1,3 @@
-// "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -9,11 +8,11 @@ const UserProfile = () => {
     const fetchUser = async () => {
       try {
         const res = await axios.get("http://localhost:3000/api/current-user", {
-          withCredentials: true, // si tu utilises des cookies
+          withCredentials: true,
         });
 
         if (res.data.success) {
-          setUsername(res.data.user.username); // <- récupération du username
+          setUsername(res.data.user.username);
         }
       } catch (err) {
         console.error("Erreur lors de la récupération de l'utilisateur :", err);

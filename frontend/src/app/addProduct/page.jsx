@@ -50,7 +50,7 @@ export default function AddressForm() {
       if (err.response?.data?.message) {
         setError("Error" + err.response.data.message);
       } else {
-        setError("Server error.");
+        setError("Server error");
       }
     }
   };
@@ -63,7 +63,7 @@ export default function AddressForm() {
         >
         <Typography>
           <h2 className={`text-center text-gray-800 text-2xl mb-6 font-semibold ${poppins.className}`}>
-            Add Product
+            Add Product   
           </h2>
         </Typography>
 
@@ -86,6 +86,17 @@ export default function AddressForm() {
             fullWidth
             className="bg-white rounded-md"
           />
+          <TextField
+            name="proDate"
+            label="Production Date"
+            type="date"
+            InputLabelProps={{ shrink: true }}
+            value={form.proDate}
+            onChange={handleChange}
+            required
+            fullWidth
+            className="bg-white rounded-md"
+          />  
           <TextField
             name="expDate"
             label="Expiration Date"

@@ -17,7 +17,6 @@ app.use(cors({
   credentials: true
 }));
 
-
 app.use("/auth", authRoute)
 app.use("/api", productRoute)
 

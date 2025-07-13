@@ -3,9 +3,9 @@ import mongoose from "mongoose";
 
 export const createProduct = async (req, res) => {
     try {
-        const { category, name, ariDate, expDate, quant, onePrice } = req.body;
+        const { category, name, ariDate, proDate, expDate, quant, onePrice } = req.body;
 
-        if (!category || !name || !expDate || !quant || !onePrice) {
+        if (!category || !name || !proDate || !expDate || !quant || !onePrice) {
             return res.status(400).json({ 
                 success: false,
                 message: "Missing required fields" 
@@ -23,6 +23,7 @@ export const createProduct = async (req, res) => {
             category,
             name,
             ariDate,
+            proDate,
             expDate, 
             quant,
             onePrice,
@@ -170,3 +171,4 @@ export const deleteProduct = async(req, res) => {
         })
     }
 }
+

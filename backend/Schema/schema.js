@@ -5,24 +5,24 @@ const { Schema } = mongoose;
 const UsersSchema = new Schema({
   email: {
     type: String,
-    required: [true, 'L\'email est obligatoire'],
+    required: [true, 'Email is required'],
     unique: true,
     trim: true,
     lowercase: true,
   },
   username: {
     type: String,
-    required: [true, "Veuillez entrer un nom d'utilisateur"],
-    unique: true
+    required: [true, 'Username is required'],
+    unique: true,
   },
   password: {
     type: String,
     required: true,
-    minlength: [6, "Le mot de passe doit contenir au moins 6 caractères"]
+    minlength: [6, 'Password must be at least 6 characters long'],
   },
   refreshToken: {
     type: String,
-    default: ''
+    default: '',
   }
 });
 
@@ -43,10 +43,13 @@ const ProductSchema = new Schema({
         default: Date.now,
         required: true
     },
+    proDate: {
+        type: Date,
+        required: [true, "Production date is required"],
+    },
     expDate: {
         type: Date,
-        required: [true, "Expiration date is required"],
-        index: { expires: 0 }
+        required: [true, "Expiration date is required"]
     },
     quant: {
         type: Number,
@@ -59,16 +62,11 @@ const ProductSchema = new Schema({
         min: [0.01, "Price must be positive"]
     },
     user: {
-        userId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Users',
-            required: true,
-            immutable: true
+        type: {
+            userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Users', required: true },
+            username: { type: String, required: true }
         },
-        username: {
-            type: String,
-            required: true
-        }
+        required: true
     }
 }, { timestamps: true });
 export const Product = mongoose.model('Product', ProductSchema);

@@ -13,7 +13,6 @@ export const authenticateToken = async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.SECRET_ACCESS);
-
         const user = await Users.findById(decoded._id).select('-password');
 
         if (!user) {
